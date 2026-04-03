@@ -20,7 +20,7 @@
 All screens are `<div class="screen">` toggled via JS:
 
 1. **Setup Screen** (`#setup-screen`) — 3-step onboarding:
-   - Step 1: Welcome with "the U" logo
+   - Step 1: Welcome with "the U" logo + Import Data option for returning users
    - Step 2: Add accountability partners (name + phone)
    - Step 3: Enter name and "why" statement
 
@@ -99,11 +99,12 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - **Always update CLAUDE.md.** Any feature addition, removal, or structural change must be reflected in this file before committing.
 
 ## Current Version
-**v1.3.0** — Pick which friend to text (2026-04-02)
+**v1.4.0** — Import data on setup screen (2026-04-02)
 
 ## Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.4.0 | 2026-04-02 | Added Import Data option on setup welcome screen for returning users restoring a backup. |
 | v1.3.0 | 2026-04-02 | SOS modal now shows a button for each partner so user can pick who to text. |
 | v1.2.0 | 2026-04-02 | Added export/import data feature in Settings for backing up and restoring user data. |
 | v1.1.0 | 2026-04-02 | Added Resources tab (Community, Prayer, Bible/YouVersion link, Worship — most under construction). Changed "Text My Partner" to "Text My Friend". SMS now uses first name only, removed "via the U" branding from message. |
