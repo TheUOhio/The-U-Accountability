@@ -27,7 +27,9 @@ All screens are `<div class="screen">` toggled via JS:
 2. **Dashboard** (`#dashboard-screen`):
    - Greeting + streak counter
    - **SOS Button** — pulsing circle, opens SOS modal
-   - **Check-in** — two buttons: ✓ "Stayed Pure" and ✗ "I Fell"
+   - **Check-in** — split into two sections:
+     - ✓ "Stayed Pure Yesterday" — marks **yesterday** as clean, disappears once tapped
+     - ✗ "I Fell" — marks **today** as fell, always available, tracks fall count per day
      - Each triggers an encouragement message (slide-down banner)
      - Clean check-ins: victory encouragements
      - Falls: grace encouragements (no condemnation)
@@ -36,6 +38,8 @@ All screens are `<div class="screen">` toggled via JS:
 3. **Calendar** (`#calendar-screen`):
    - Stats: current streak, best streak, total clean days
    - Monthly grid — tap to cycle: empty → clean (green ✓) → fell (red ✗) → empty
+   - Days before `setupDate` are locked/dimmed
+   - Calendar changes trigger badge checks
    - Navigate months with arrows
 
 4. **Badges** (`#badges-screen`):
@@ -80,10 +84,12 @@ All screens are `<div class="screen">` toggled via JS:
 ```json
 {
   "setupComplete": true,
+  "setupDate": "YYYY-MM-DD",
   "userName": "string",
   "userWhy": "string",
   "partners": [{ "name": "string", "phone": "string" }],
   "checkedDays": { "YYYY-MM-DD": "clean" | "fell" },
+  "fellCounts": { "YYYY-MM-DD": number },
   "earnedBadges": { "day1": true },
   "shownBadges": { "day1": true }
 }
@@ -99,11 +105,12 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - **Always update CLAUDE.md.** Any feature addition, removal, or structural change must be reflected in this file before committing.
 
 ## Current Version
-**v1.4.0** — Import data on setup screen (2026-04-02)
+**v1.5.0** — Reworked check-in, fall tracking, setup date lock (2026-04-02)
 
 ## Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.5.0 | 2026-04-02 | Reworked check-in: "Stayed Pure" now marks yesterday (disappears once used), "I Fell" marks today (always available, tracks fall count). Calendar locks days before setup date. Calendar changes trigger badge checks. Added `setupDate` and `fellCounts` to data model. |
 | v1.4.0 | 2026-04-02 | Added Import Data option on setup welcome screen for returning users restoring a backup. |
 | v1.3.0 | 2026-04-02 | SOS modal now shows a button for each partner so user can pick who to text. |
 | v1.2.0 | 2026-04-02 | Added export/import data feature in Settings for backing up and restoring user data. |

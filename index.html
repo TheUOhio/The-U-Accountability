@@ -728,20 +728,9 @@
 
   <!-- Check-in -->
   <div class="card" id="checkin-card">
-    <h3>Today's Check-In</h3>
-    <p class="subtitle" id="checkin-subtitle">Did you stay pure today?</p>
-    <div id="checkin-area">
-      <div class="checkin-buttons">
-        <button class="checkin-btn success-btn" onclick="checkIn(true)">
-          <span class="checkin-icon">✓</span>
-          <span class="checkin-text">Stayed Pure</span>
-        </button>
-        <button class="checkin-btn fail-btn" onclick="checkIn(false)">
-          <span class="checkin-icon">✗</span>
-          <span class="checkin-text">I Fell</span>
-        </button>
-      </div>
-    </div>
+    <h3>Check-In</h3>
+    <p class="subtitle" id="checkin-subtitle"></p>
+    <div id="checkin-area"></div>
   </div>
 
   <!-- Next Badge -->
@@ -1125,6 +1114,8 @@
     appData.userName = document.getElementById('user-name').value.trim();
     appData.userWhy = document.getElementById('user-why').value.trim();
     appData.setupComplete = true;
+    appData.setupDate = appData.setupDate || dateKey(new Date());
+    appData.fellCounts = appData.fellCounts || {};
     saveData();
     showApp();
   }
@@ -1157,48 +1148,62 @@
     const today = new Date();
     document.getElementById('today-date').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
-    // Check-in status
     const todayKey = dateKey(today);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayKey = dateKey(yesterday);
     const area = document.getElementById('checkin-area');
     const sub = document.getElementById('checkin-subtitle');
 
-    const status = appData.checkedDays[todayKey];
+    // Ensure fellCounts exists
+    appData.fellCounts = appData.fellCounts || {};
 
-    if (status === 'fell') {
-      // Fell — locked in for the day, show grace message
-      area.innerHTML = `
-        <div class="checkin-done">
-          <div class="done-icon">🙏</div>
-          <div class="done-text">You were honest today. Tomorrow is a new day.</div>
-        </div>`;
-      sub.textContent = 'Checked in for today';
-    } else if (status === 'clean') {
-      // Checked in pure — show confirmation but keep the fall button available
-      area.innerHTML = `
-        <div class="checkin-done" style="margin-bottom:12px;">
-          <div class="done-icon">✅</div>
-          <div class="done-text">You checked in pure today. Keep going!</div>
-        </div>
-        <button class="checkin-btn fail-btn" onclick="checkIn(false)" style="border-color:rgba(248,113,113,0.2);">
-          <span class="checkin-icon">✗</span>
-          <span class="checkin-text">I Fell</span>
+    const yesterdayStatus = appData.checkedDays[yesterdayKey];
+    const todayStatus = appData.checkedDays[todayKey];
+    const todayFellCount = appData.fellCounts[todayKey] || 0;
+
+    // Check if yesterday is before setup date (don't show stayed pure button)
+    const setupDate = appData.setupDate || dateKey(today);
+    const yesterdayBeforeSetup = yesterdayKey < setupDate;
+
+    let html = '';
+
+    // "Stayed Pure" for yesterday — only show if yesterday isn't checked in yet and isn't before setup
+    if (!yesterdayBeforeSetup && !yesterdayStatus) {
+      html += `
+        <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Yesterday</p>
+        <button class="checkin-btn success-btn" onclick="checkInYesterday()" style="margin-bottom:16px;">
+          <span class="checkin-icon">✓</span>
+          <span class="checkin-text">Stayed Pure Yesterday</span>
         </button>`;
-      sub.textContent = 'Checked in for today';
-    } else {
-      // Not checked in yet
-      area.innerHTML = `
-        <div class="checkin-buttons">
-          <button class="checkin-btn success-btn" onclick="checkIn(true)">
-            <span class="checkin-icon">✓</span>
-            <span class="checkin-text">Stayed Pure</span>
-          </button>
-          <button class="checkin-btn fail-btn" onclick="checkIn(false)">
-            <span class="checkin-icon">✗</span>
-            <span class="checkin-text">I Fell</span>
-          </button>
+    } else if (!yesterdayBeforeSetup && yesterdayStatus === 'clean') {
+      html += `
+        <div class="checkin-done" style="margin-bottom:16px;">
+          <div class="done-icon">✅</div>
+          <div class="done-text">Yesterday: Stayed Pure</div>
         </div>`;
-      sub.textContent = 'Did you stay pure today?';
+    } else if (!yesterdayBeforeSetup && yesterdayStatus === 'fell') {
+      html += `
+        <div class="checkin-done" style="margin-bottom:16px;">
+          <div class="done-icon">🙏</div>
+          <div class="done-text">Yesterday: Fell — but grace is new every morning</div>
+        </div>`;
     }
+
+    // "I Fell" for today — always available
+    html += `
+      <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Today</p>
+      <button class="checkin-btn fail-btn" onclick="checkInFell()">
+        <span class="checkin-icon">✗</span>
+        <span class="checkin-text">I Fell</span>
+      </button>`;
+
+    if (todayFellCount > 0) {
+      html += `<p style="font-size:12px; color:var(--danger); margin-top:8px;">Fell ${todayFellCount} time${todayFellCount !== 1 ? 's' : ''} today</p>`;
+    }
+
+    area.innerHTML = html;
+    sub.textContent = todayFellCount > 0 ? "Stay strong. You're not alone." : "How are you doing?";
 
     // Next badge
     updateNextBadge(streak);
@@ -1211,22 +1216,29 @@
     return 'Evening';
   }
 
-  function checkIn(clean) {
-    const todayKey = dateKey(new Date());
-    appData.checkedDays[todayKey] = clean ? 'clean' : 'fell';
+  function checkInYesterday() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayKey = dateKey(yesterday);
+    appData.checkedDays[yesterdayKey] = 'clean';
     saveData();
     updateDashboard();
 
-    // Show encouragement
-    if (clean) {
-      const msg = ENCOURAGEMENTS_GOOD[Math.floor(Math.random() * ENCOURAGEMENTS_GOOD.length)];
-      showEncouragement('Victory', msg, 'green');
-      // Check for new badges
-      setTimeout(() => checkBadges(), 1500);
-    } else {
-      const msg = ENCOURAGEMENTS_FALL[Math.floor(Math.random() * ENCOURAGEMENTS_FALL.length)];
-      showEncouragement('Grace', msg, 'red');
-    }
+    const msg = ENCOURAGEMENTS_GOOD[Math.floor(Math.random() * ENCOURAGEMENTS_GOOD.length)];
+    showEncouragement('Victory', msg, 'green');
+    setTimeout(() => checkBadges(), 1500);
+  }
+
+  function checkInFell() {
+    const todayKey = dateKey(new Date());
+    appData.checkedDays[todayKey] = 'fell';
+    appData.fellCounts = appData.fellCounts || {};
+    appData.fellCounts[todayKey] = (appData.fellCounts[todayKey] || 0) + 1;
+    saveData();
+    updateDashboard();
+
+    const msg = ENCOURAGEMENTS_FALL[Math.floor(Math.random() * ENCOURAGEMENTS_FALL.length)];
+    showEncouragement('Grace', msg, 'red');
   }
 
   function showEncouragement(title, msg, color) {
@@ -1358,21 +1370,25 @@
 
     for (let i = 0; i < firstDay; i++) html += '<div class="calendar-day empty"></div>';
 
+    const setupDate = appData.setupDate || dateKey(today);
+
     for (let d = 1; d <= daysInMonth; d++) {
       const thisDate = new Date(currentCalYear, currentCalMonth, d);
       thisDate.setHours(0,0,0,0);
       const key = dateKey(thisDate);
       const isToday = thisDate.getTime() === today.getTime();
       const isFuture = thisDate > today;
+      const isBeforeSetup = key < setupDate;
       const status = appData.checkedDays[key];
 
       let cls = 'calendar-day';
       if (isToday) cls += ' today';
-      if (isFuture) cls += ' future';
+      if (isFuture || isBeforeSetup) cls += ' future';
       if (status === 'clean') cls += ' checked';
       if (status === 'fell') cls += ' failed';
 
-      html += `<div class="${cls}" ${!isFuture ? `onclick="toggleCalDay('${key}')"` : ''}>${d}</div>`;
+      const clickable = !isFuture && !isBeforeSetup;
+      html += `<div class="${cls}" ${clickable ? `onclick="toggleCalDay('${key}')"` : ''}>${d}</div>`;
     }
     grid.innerHTML = html;
   }
@@ -1380,7 +1396,8 @@
   function toggleCalDay(key) {
     const today = new Date(); today.setHours(0,0,0,0);
     const target = new Date(key + 'T00:00:00');
-    if (target > today) return;
+    const setupDate = appData.setupDate || dateKey(today);
+    if (target > today || key < setupDate) return;
 
     const current = appData.checkedDays[key];
     if (!current) appData.checkedDays[key] = 'clean';
@@ -1390,6 +1407,7 @@
     saveData();
     renderCalendar();
     updateDashboard();
+    checkBadges();
   }
 
   function changeMonth(dir) {
