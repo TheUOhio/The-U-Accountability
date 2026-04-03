@@ -43,15 +43,23 @@ All screens are `<div class="screen">` toggled via JS:
    - Earned badges glow gold; locked badges are dimmed
    - Badge popup appears when a new milestone is hit
 
-5. **Settings** (`#settings-screen`):
+5. **Resources** (`#resources-screen`):
+   - Community — under construction
+   - Prayer — under construction
+   - Bible — links to YouVersion (Bible.com)
+   - Worship — under construction
+
+6. **Settings** (`#settings-screen`):
    - Edit name and "why"
    - Manage partners
+   - Export data (downloads JSON backup file)
+   - Import data (restores from JSON backup file, with confirmation)
    - Reset all data
 
-6. **SOS Modal** (`#sos-modal`):
+7. **SOS Modal** (`#sos-modal`):
    - Random Bible verse (20 curated, purity/temptation themed)
    - User's "why" statement
-   - "Text My Partner" — opens native SMS via `sms:` protocol
+   - "Text My Friend" — opens native SMS via `sms:` protocol
 
 ## Badge Milestones
 | Badge | Days | Icon |
@@ -91,11 +99,13 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - **Always update CLAUDE.md.** Any feature addition, removal, or structural change must be reflected in this file before committing.
 
 ## Current Version
-**v1.0.0** — Initial release (2026-03-25)
+**v1.2.0** — Export/import data (2026-04-02)
 
 ## Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.2.0 | 2026-04-02 | Added export/import data feature in Settings for backing up and restoring user data. |
+| v1.1.0 | 2026-04-02 | Added Resources tab (Community, Prayer, Bible/YouVersion link, Worship — most under construction). Changed "Text My Partner" to "Text My Friend". SMS now uses first name only, removed "via the U" branding from message. |
 | v1.0.0 | 2026-03-25 | Initial release — setup flow, dashboard with SOS button, check-in (clean/fell) with encouragement, calendar with streak tracking, badge milestones, settings, PWA manifest |
 
 ## Key Design Decisions
@@ -119,5 +129,5 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - Text all partners (currently first partner only)
 - Daily reminder notifications
 - Journal/notes feature
-- Export/share streak data
+- ~~Export/share streak data~~ (done in v1.2.0)
 - Animated confetti on badge earn

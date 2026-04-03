@@ -819,9 +819,77 @@
   </div>
 
   <div class="card">
+    <h3 class="mb-8">Your Data</h3>
+    <p class="subtitle mb-16">Back up your data or restore from a previous backup.</p>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-primary btn-small" onclick="exportData()">Export Data</button>
+      <button class="btn btn-outline btn-small" onclick="document.getElementById('import-file').click()">Import Data</button>
+      <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(event)">
+    </div>
+  </div>
+
+  <div class="card">
     <h3 class="mb-8">Reset</h3>
     <p class="subtitle mb-16">Erase all data and start over. Cannot be undone.</p>
     <button class="btn btn-danger btn-small" onclick="resetApp()">Reset Everything</button>
+  </div>
+</div>
+
+<!-- ═══════ RESOURCES SCREEN ═══════ -->
+<div id="resources-screen" class="screen">
+  <h1 class="mb-8" style="font-size:24px;">Resources</h1>
+  <p class="subtitle mb-24">Tools to support your journey.</p>
+
+  <div class="card" style="opacity:0.5; pointer-events:none;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div style="font-size:28px;">👥</div>
+      <div>
+        <h3>Community</h3>
+        <p class="subtitle" style="margin-top:2px;">Connect with others on the same journey</p>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:8px 12px; background:var(--border); border-radius:8px; text-align:center;">
+      <span style="font-size:13px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px;">Under Construction</span>
+    </div>
+  </div>
+
+  <div class="card" style="opacity:0.5; pointer-events:none;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div style="font-size:28px;">🙏</div>
+      <div>
+        <h3>Prayer</h3>
+        <p class="subtitle" style="margin-top:2px;">Prayer requests and guided prayers</p>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:8px 12px; background:var(--border); border-radius:8px; text-align:center;">
+      <span style="font-size:13px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px;">Under Construction</span>
+    </div>
+  </div>
+
+  <a href="https://www.bible.com/app" target="_blank" rel="noopener" class="card" style="display:block; text-decoration:none; color:inherit;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div style="font-size:28px;">📖</div>
+      <div>
+        <h3>Bible</h3>
+        <p class="subtitle" style="margin-top:2px;">Open YouVersion Bible app</p>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:8px 12px; background:var(--success-dim); border-radius:8px; text-align:center;">
+      <span style="font-size:13px; font-weight:600; color:var(--success); text-transform:uppercase; letter-spacing:1px;">Open →</span>
+    </div>
+  </a>
+
+  <div class="card" style="opacity:0.5; pointer-events:none;">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div style="font-size:28px;">🎵</div>
+      <div>
+        <h3>Worship</h3>
+        <p class="subtitle" style="margin-top:2px;">Worship music to refocus your heart</p>
+      </div>
+    </div>
+    <div style="margin-top:12px; padding:8px 12px; background:var(--border); border-radius:8px; text-align:center;">
+      <span style="font-size:13px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px;">Under Construction</span>
+    </div>
   </div>
 </div>
 
@@ -844,7 +912,7 @@
       <div id="sos-reason"></div>
     </div>
 
-    <button class="btn btn-primary mb-16" id="sos-text-btn" onclick="sendSOSText()">Text My Partner</button>
+    <button class="btn btn-primary mb-16" id="sos-text-btn" onclick="sendSOSText()">Text My Friend</button>
     <button class="btn btn-outline" onclick="closeSOSModal()">I'm Okay Now</button>
   </div>
 </div>
@@ -875,6 +943,9 @@
   </button>
   <button class="nav-item" onclick="switchTab('badges')" id="nav-badges">
     <span class="nav-icon">🏆</span> Badges
+  </button>
+  <button class="nav-item" onclick="switchTab('resources')" id="nav-resources">
+    <span class="nav-icon">📚</span> Resources
   </button>
   <button class="nav-item" onclick="switchTab('settings')" id="nav-settings">
     <span class="nav-icon">⚙️</span> Settings
@@ -1333,7 +1404,8 @@
 
   function sendSOSText() {
     const p = appData.partners[0];
-    const msg = encodeURIComponent(`Hey ${p.name}, I'm struggling right now and could use your prayer and support. - ${appData.userName} (via the U)`);
+    const firstName = appData.userName.split(' ')[0];
+    const msg = encodeURIComponent(`Hey ${p.name}, I'm struggling right now and could use your prayer and support. - ${firstName}`);
     window.location.href = `sms:${p.phone.replace(/\D/g, '')}?&body=${msg}`;
   }
 
@@ -1385,6 +1457,43 @@
       localStorage.removeItem('theu_data');
       location.reload();
     }
+  }
+
+  // ── Export / Import ──
+  function exportData() {
+    const data = JSON.stringify(appData, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'theu-backup-' + dateKey(new Date()) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Data exported!');
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const imported = JSON.parse(e.target.result);
+        if (!imported.setupComplete || !imported.userName) {
+          showToast('Invalid backup file');
+          return;
+        }
+        if (confirm('This will replace all your current data with the imported backup. Continue?')) {
+          appData = imported;
+          saveData();
+          location.reload();
+        }
+      } catch (err) {
+        showToast('Could not read file');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
   }
 
   // ── Helpers ──
