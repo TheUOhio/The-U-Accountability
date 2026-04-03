@@ -1400,9 +1400,17 @@
     if (target > today || key < setupDate) return;
 
     const current = appData.checkedDays[key];
-    if (!current) appData.checkedDays[key] = 'clean';
-    else if (current === 'clean') appData.checkedDays[key] = 'fell';
-    else delete appData.checkedDays[key];
+    const isSetupDay = key === setupDate;
+
+    if (isSetupDay) {
+      // Setup day: can only toggle between fell and unchecked (no clean)
+      if (!current) appData.checkedDays[key] = 'fell';
+      else delete appData.checkedDays[key];
+    } else {
+      if (!current) appData.checkedDays[key] = 'clean';
+      else if (current === 'clean') appData.checkedDays[key] = 'fell';
+      else delete appData.checkedDays[key];
+    }
 
     saveData();
     renderCalendar();
