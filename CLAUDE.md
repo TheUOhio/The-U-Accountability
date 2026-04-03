@@ -126,8 +126,11 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 | `CLAUDE.md` | This file — project context for AI assistance |
 
 ## Future Enhancement Ideas
+- **"the U" logo as home screen icon** — create icon-192.png and icon-512.png from the logo for PWA install
+- **"More Verse" button** — add a button in the SOS modal to cycle to another random verse without closing
+- **Home screen install instructions** — during setup, show the user step-by-step how to save the app to their home screen (iPhone and Android)
 - Service worker for offline support
-- App icons (icon-192.png, icon-512.png)
+- ~~App icons (icon-192.png, icon-512.png)~~ (covered by logo home screen icon above)
 - ~~Text all partners (currently first partner only)~~ (done in v1.3.0)
 - Daily reminder notifications
 - Journal/notes feature
