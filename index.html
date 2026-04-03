@@ -912,7 +912,7 @@
       <div id="sos-reason"></div>
     </div>
 
-    <button class="btn btn-primary mb-16" id="sos-text-btn" onclick="sendSOSText()">Text My Friend</button>
+    <div id="sos-partner-list" class="mb-16"></div>
     <button class="btn btn-outline" onclick="closeSOSModal()">I'm Okay Now</button>
   </div>
 </div>
@@ -1399,11 +1399,20 @@
     document.getElementById('sos-verse-ref').textContent = '— ' + verse.ref;
     document.getElementById('sos-reason').textContent = appData.userWhy;
     document.getElementById('sos-modal').classList.add('active');
-    document.getElementById('sos-text-btn').style.display = appData.partners.length > 0 ? 'flex' : 'none';
+
+    // Render partner buttons
+    const list = document.getElementById('sos-partner-list');
+    if (appData.partners.length === 0) {
+      list.innerHTML = '';
+    } else {
+      list.innerHTML = appData.partners.map((p, i) => `
+        <button class="btn btn-primary" style="margin-bottom:8px;" onclick="sendSOSText(${i})">📱 Text ${escHtml(p.name)}</button>
+      `).join('');
+    }
   }
 
-  function sendSOSText() {
-    const p = appData.partners[0];
+  function sendSOSText(index) {
+    const p = appData.partners[index];
     const firstName = appData.userName.split(' ')[0];
     const msg = encodeURIComponent(`Hey ${p.name}, I'm struggling right now and could use your prayer and support. - ${firstName}`);
     window.location.href = `sms:${p.phone.replace(/\D/g, '')}?&body=${msg}`;

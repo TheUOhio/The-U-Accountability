@@ -59,7 +59,7 @@ All screens are `<div class="screen">` toggled via JS:
 7. **SOS Modal** (`#sos-modal`):
    - Random Bible verse (20 curated, purity/temptation themed)
    - User's "why" statement
-   - "Text My Friend" — opens native SMS via `sms:` protocol
+   - "Text My Friend" — shows a button for each partner, opens native SMS via `sms:` protocol
 
 ## Badge Milestones
 | Badge | Days | Icon |
@@ -99,11 +99,12 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - **Always update CLAUDE.md.** Any feature addition, removal, or structural change must be reflected in this file before committing.
 
 ## Current Version
-**v1.2.0** — Export/import data (2026-04-02)
+**v1.3.0** — Pick which friend to text (2026-04-02)
 
 ## Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.3.0 | 2026-04-02 | SOS modal now shows a button for each partner so user can pick who to text. |
 | v1.2.0 | 2026-04-02 | Added export/import data feature in Settings for backing up and restoring user data. |
 | v1.1.0 | 2026-04-02 | Added Resources tab (Community, Prayer, Bible/YouVersion link, Worship — most under construction). Changed "Text My Partner" to "Text My Friend". SMS now uses first name only, removed "via the U" branding from message. |
 | v1.0.0 | 2026-03-25 | Initial release — setup flow, dashboard with SOS button, check-in (clean/fell) with encouragement, calendar with streak tracking, badge milestones, settings, PWA manifest |
@@ -126,7 +127,7 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 ## Future Enhancement Ideas
 - Service worker for offline support
 - App icons (icon-192.png, icon-512.png)
-- Text all partners (currently first partner only)
+- ~~Text all partners (currently first partner only)~~ (done in v1.3.0)
 - Daily reminder notifications
 - Journal/notes feature
 - ~~Export/share streak data~~ (done in v1.2.0)
