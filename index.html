@@ -1191,12 +1191,17 @@
     }
 
     // "I Fell" for today — always available
+    // Center the button when "Stayed Pure" is not showing
+    const showingYesterday = !yesterdayBeforeSetup && !yesterdayStatus;
+    const fellStyle = !showingYesterday ? 'max-width:240px; margin:0 auto;' : '';
     html += `
-      <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Today</p>
-      <button class="checkin-btn fail-btn" onclick="checkInFell()">
-        <span class="checkin-icon">✗</span>
-        <span class="checkin-text">I Fell</span>
-      </button>`;
+      <div style="text-align:center; ${!showingYesterday ? 'margin-top:8px;' : ''}">
+        <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Today</p>
+        <button class="checkin-btn fail-btn" onclick="checkInFell()" style="${fellStyle}">
+          <span class="checkin-icon">✗</span>
+          <span class="checkin-text">I Fell</span>
+        </button>
+      </div>`;
 
     if (todayFellCount > 0) {
       html += `<p style="font-size:12px; color:var(--danger); margin-top:8px;">Fell ${todayFellCount} time${todayFellCount !== 1 ? 's' : ''} today</p>`;
