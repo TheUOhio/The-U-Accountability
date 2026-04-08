@@ -550,7 +550,8 @@
       min-width: 0;
     }
     .nav-item.active { color: var(--white); }
-    .nav-item .nav-icon { font-size: 22px; }
+    .nav-item .nav-icon { font-size: 20px; }
+    .nav-item .nav-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 
     /* ── Misc ── */
     .divider { height: 1px; background: var(--border); margin: 20px 0; }
@@ -949,19 +950,19 @@
 <!-- ═══════ BOTTOM NAV ═══════ -->
 <div class="bottom-nav" id="bottom-nav" style="display:none;">
   <button class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard">
-    <span class="nav-icon">🏠</span> Home
+    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
   </button>
   <button class="nav-item" onclick="switchTab('calendar')" id="nav-calendar">
-    <span class="nav-icon">📅</span> Calendar
+    <span class="nav-icon">📅</span><span class="nav-label">Cal</span>
   </button>
   <button class="nav-item" onclick="switchTab('badges')" id="nav-badges">
-    <span class="nav-icon">🏆</span> Badges
+    <span class="nav-icon">🏆</span><span class="nav-label">Badges</span>
   </button>
   <button class="nav-item" onclick="switchTab('resources')" id="nav-resources">
-    <span class="nav-icon">📚</span> Resources
+    <span class="nav-icon">📚</span><span class="nav-label">More</span>
   </button>
   <button class="nav-item" onclick="switchTab('settings')" id="nav-settings">
-    <span class="nav-icon">⚙️</span> Settings
+    <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
   </button>
 </div>
 
