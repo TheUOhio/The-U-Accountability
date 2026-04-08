@@ -1169,39 +1169,50 @@
     let html = '';
 
     // "Stayed Pure" for yesterday — only show if yesterday isn't checked in yet and isn't before setup
-    if (!yesterdayBeforeSetup && !yesterdayStatus) {
-      html += `
-        <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Yesterday</p>
-        <button class="checkin-btn success-btn" onclick="checkInYesterday()" style="margin-bottom:16px;">
-          <span class="checkin-icon">✓</span>
-          <span class="checkin-text">Stayed Pure Yesterday</span>
-        </button>`;
-    } else if (!yesterdayBeforeSetup && yesterdayStatus === 'clean') {
-      html += `
-        <div class="checkin-done" style="margin-bottom:16px;">
-          <div class="done-icon">✅</div>
-          <div class="done-text">Yesterday: Stayed Pure</div>
-        </div>`;
-    } else if (!yesterdayBeforeSetup && yesterdayStatus === 'fell') {
-      html += `
-        <div class="checkin-done" style="margin-bottom:16px;">
-          <div class="done-icon">🙏</div>
-          <div class="done-text">Yesterday: Fell — but grace is new every morning</div>
-        </div>`;
-    }
-
-    // "I Fell" for today — always available
-    // Center the button when "Stayed Pure" is not showing
     const showingYesterday = !yesterdayBeforeSetup && !yesterdayStatus;
-    const fellStyle = !showingYesterday ? 'max-width:240px; margin:0 auto;' : '';
-    html += `
-      <div style="text-align:center; ${!showingYesterday ? 'margin-top:8px;' : ''}">
-        <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Today</p>
-        <button class="checkin-btn fail-btn" onclick="checkInFell()" style="${fellStyle}">
+
+    if (showingYesterday) {
+      // Both buttons side by side (half and half)
+      html += `
+        <div style="display:flex; gap:12px;">
+          <div style="flex:1; text-align:center;">
+            <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Yesterday</p>
+            <button class="checkin-btn success-btn" onclick="checkInYesterday()" style="width:100%;">
+              <span class="checkin-icon">✓</span>
+              <span class="checkin-text">Stayed Pure</span>
+            </button>
+          </div>
+          <div style="flex:1; text-align:center;">
+            <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Today</p>
+            <button class="checkin-btn fail-btn" onclick="checkInFell()" style="width:100%;">
+              <span class="checkin-icon">✗</span>
+              <span class="checkin-text">I Fell</span>
+            </button>
+          </div>
+        </div>`;
+    } else {
+      // Yesterday status message (if applicable)
+      if (!yesterdayBeforeSetup && yesterdayStatus === 'clean') {
+        html += `
+          <div class="checkin-done" style="margin-bottom:16px;">
+            <div class="done-icon">✅</div>
+            <div class="done-text">Yesterday: Stayed Pure</div>
+          </div>`;
+      } else if (!yesterdayBeforeSetup && yesterdayStatus === 'fell') {
+        html += `
+          <div class="checkin-done" style="margin-bottom:16px;">
+            <div class="done-icon">🙏</div>
+            <div class="done-text">Yesterday: Fell — but grace is new every morning</div>
+          </div>`;
+      }
+      // "I Fell" full width
+      html += `
+        <p style="font-size:12px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; text-align:center;">Today</p>
+        <button class="checkin-btn fail-btn" onclick="checkInFell()" style="width:100%;">
           <span class="checkin-icon">✗</span>
           <span class="checkin-text">I Fell</span>
-        </button>
-      </div>`;
+        </button>`;
+    }
 
     if (todayFellCount > 0) {
       html += `<p style="font-size:12px; color:var(--danger); margin-top:8px;">Fell ${todayFellCount} time${todayFellCount !== 1 ? 's' : ''} today</p>`;
