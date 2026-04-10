@@ -1,3 +1,4 @@
+
 # the U — Accountability App
 
 ## Overview
@@ -25,6 +26,7 @@ All screens are `<div class="screen">` toggled via JS:
    - Step 3: Enter name and "why" statement
 
 2. **Dashboard** (`#dashboard-screen`):
+   - **Hamburger menu** (top-left) — opens slide-out drawer with Resources and Settings
    - Greeting + streak counter
    - **SOS Button** — pulsing circle, opens SOS modal
    - **Check-in** — split into two sections:
@@ -47,13 +49,13 @@ All screens are `<div class="screen">` toggled via JS:
    - Earned badges glow gold; locked badges are dimmed
    - Badge popup appears when a new milestone is hit
 
-5. **Resources** (`#resources-screen`):
+5. **Resources** (`#resources-screen`) — accessed via hamburger drawer:
    - Community — under construction
    - Prayer — under construction
    - Bible — links to YouVersion (Bible.com)
    - Worship — under construction
 
-6. **Settings** (`#settings-screen`):
+6. **Settings** (`#settings-screen`) — accessed via hamburger drawer:
    - Edit name and "why"
    - Manage partners
    - Export data (downloads JSON backup file)
@@ -105,11 +107,12 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - **Always update CLAUDE.md.** Any feature addition, removal, or structural change must be reflected in this file before committing.
 
 ## Current Version
-**v1.5.0** — Reworked check-in, fall tracking, setup date lock (2026-04-02)
+**v1.6.0** — Hamburger drawer menu, 3-tab bottom nav (2026-04-10)
 
 ## Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.6.0 | 2026-04-10 | Moved Resources and Settings into a hamburger drawer menu (slides from left). Bottom nav reduced to 3 tabs: Home, Calendar, Badges with full names. |
 | v1.5.0 | 2026-04-02 | Reworked check-in: "Stayed Pure" now marks yesterday (disappears once used), "I Fell" marks today (always available, tracks fall count). Calendar locks days before setup date. Calendar changes trigger badge checks. Added `setupDate` and `fellCounts` to data model. |
 | v1.4.0 | 2026-04-02 | Added Import Data option on setup welcome screen for returning users restoring a backup. |
 | v1.3.0 | 2026-04-02 | SOS modal now shows a button for each partner so user can pick who to text. |
