@@ -107,11 +107,12 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 - **Always update CLAUDE.md.** Any feature addition, removal, or structural change must be reflected in this file before committing.
 
 ## Current Version
-**v1.6.0** — Hamburger drawer menu, 3-tab bottom nav (2026-04-10)
+**v1.7.0** — Service worker for offline support and auto-updates (2026-04-10)
 
 ## Changelog
 | Version | Date | Changes |
 |---------|------|---------|
+| v1.7.0 | 2026-04-10 | Added service worker (`sw.js`) for offline support and automatic updates. Network-first strategy ensures users always get the latest version. Added 4 missing Bible verses (24 total). |
 | v1.6.0 | 2026-04-10 | Moved Resources and Settings into a hamburger drawer menu (slides from left). Bottom nav reduced to 3 tabs: Home, Calendar, Badges with full names. |
 | v1.5.0 | 2026-04-02 | Reworked check-in: "Stayed Pure" now marks yesterday (disappears once used), "I Fell" marks today (always available, tracks fall count). Calendar locks days before setup date. Calendar changes trigger badge checks. Added `setupDate` and `fellCounts` to data model. |
 | v1.4.0 | 2026-04-02 | Added Import Data option on setup welcome screen for returning users restoring a backup. |
@@ -133,13 +134,14 @@ Note: `checkedDays` values changed from `true` to `"clean"` | `"fell"` to suppor
 |------|---------|
 | `index.html` | Entire app (HTML + CSS + JS) |
 | `manifest.json` | PWA manifest for home screen install |
+| `sw.js` | Service worker — offline support + auto-updates |
 | `CLAUDE.md` | This file — project context for AI assistance |
 
 ## Future Enhancement Ideas
 - **"the U" logo as home screen icon** — create icon-192.png and icon-512.png from the logo for PWA install
 - **"More Verse" button** — add a button in the SOS modal to cycle to another random verse without closing
 - **Home screen install instructions** — during setup, show the user step-by-step how to save the app to their home screen (iPhone and Android)
-- Service worker for offline support
+- ~~Service worker for offline support~~ (done in v1.7.0)
 - ~~App icons (icon-192.png, icon-512.png)~~ (covered by logo home screen icon above)
 - ~~Text all partners (currently first partner only)~~ (done in v1.3.0)
 - Daily reminder notifications

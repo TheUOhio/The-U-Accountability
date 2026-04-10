@@ -1741,6 +1741,14 @@
   }
 
   init();
+
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then((reg) => {
+      // Check for updates every time the app is opened
+      reg.update();
+    });
+  }
 </script>
 </body>
 </html>
